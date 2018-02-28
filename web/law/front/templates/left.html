@@ -1,0 +1,77 @@
+
+<div id="user">
+    {% if logined %}
+        <p>您好，{{ user_name }}</p>
+    {% else %}
+        <p>您好，请登录</p>
+        <p id="user-login-p">
+            <span>用户名：</span>
+            <input type="text" id="user-name-ipt">
+            <button id="login-button" onclick="submit();">Login</button>
+        </p>
+    {% endif %}
+</div>
+
+{% if not logined %}
+<script>
+function submit() {
+    var user_name = $('#user-name-ipt').val();
+
+    // post to login and refresh
+    $.post('/login', {
+        'name': user_name
+    }, function(data) {
+        if (data.status == "ok") {
+            location.reload();
+        }
+        else {
+            alert('用户不存在');
+        }
+    });
+
+}
+
+$('#user-name-ipt').keydown(function(e){
+    if (e.keyCode == 13) {
+        submit();
+    }
+});
+</script>
+{% endif %}
+
+<hr class="left-hr">
+
+{% if logined %}
+<div id="brand">
+    {% for brand, bid in law_list %}
+        {% if bid == active %}
+            <p class="law-brand active" law-id="{{ bid }}">{{ brand }}</p>
+        {% else %}
+            <p class="law-brand normal" law-id="{{ bid }}">{{ brand }}</p>
+        {% endif %}
+    {% endfor %}
+</div>
+<script>
+
+
+$(function() {
+    $('.law-brand.normal').click(function(){
+        var id = $(this).attr('law-id');
+        $.post('/change', {
+            'bid': id
+        }, function(data) {
+            if (data.status == "ok") {
+                location.reload();
+            }
+            else {
+                alert("数据已标注完！");
+            }
+        });
+
+    });
+});
+</script>
+
+
+{% endif %}
+

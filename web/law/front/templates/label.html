@@ -1,0 +1,147 @@
+
+<script>
+$(function() {
+var ua = window.navigator.userAgent.toLowerCase();
+var isIE = !!ua.match(/msie|trident\/7|edge/);
+var isWinPhone = ua.indexOf('windows phone') !== -1;
+var isIOS = !isWinPhone && !!ua.match(/ipad|iphone|ipod/);
+
+var labelID = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var article = "{{ law_article }}";
+$('#content-textarea').val(article);
+
+function makeStr(d, num) {
+    var ret = "";
+    for (var i = 0; i < num; ++ i)
+        ret += d;
+    return ret;
+}
+
+var label = makeStr("0", article.length);
+
+
+function highLight(text) {
+    var st = 0, en, ret = $('<div></div>');
+    while (st < text.length) {
+        en = st;
+        while(en < text.length && label[en] == label[st]) ++ en;
+        var mark = $('<mark></mark>');
+        mark.text(text.substr(st, en - st));
+        mark.addClass('c' + labelID.indexOf(label[st]).toString());
+        ret.append(mark);
+        st = en;
+    }
+    var t = ret.html();
+    if (isIE) {
+        // IE wraps whitespace differently in a div vs textarea, this fixes it
+        t = t.replace(/ /g, ' <wbr>');
+    }
+    return t;
+}
+
+function handleSelect(d) {
+    var ta = $('#content-textarea');
+    var st = ta[0].selectionStart;
+    var en = ta[0].selectionEnd;
+    label = label.substr(0, st) + makeStr(d, en - st) + label.substr(en);
+    var ret = highLight(ta.val());
+    $('#content-back').html(ret);
+    test.label = label;
+}
+
+
+function handleScroll() {
+    var scrollTop = $('#content-textarea').scrollTop();
+    $('#content-container').scrollTop(scrollTop);
+
+    var scrollLeft = $('#content-textarea').scrollLeft();
+    $('#content-container').scrollLeft(scrollLeft);
+}
+
+
+function fixIOS() {
+    $('#content-textarea').css({
+        'padding-left': '+=3px',
+        'padding-right': '+=3px'
+    });
+}
+
+function bindEvents() {
+    $('#content-textarea').on({
+        'scroll': handleScroll
+    });
+}
+
+if (isIOS) {
+  fixIOS();
+}
+
+bindEvents();
+handleSelect("0");
+
+
+$('#law-button .law-button-container .button').click(function(){
+    var id = $(this).attr('alt-label-id');
+    handleSelect(labelId[parseInt(id)]);
+});
+
+$('#just-exit').click(function(){
+    // post to quit and refresh
+    $.post('/quit', {}, function(data) {
+        location.reload();
+    });
+});
+
+$('#save-exit').click(function(){
+    // post to save and refresh
+    $.post('/save', {
+        'data': article,
+        'label': label
+    }, function(data) {
+        location.reload();
+    });
+});
+
+$('#save-next').click(function(){
+    // post to save, get_next and refresh
+    $.post('/save', {
+        'data': article,
+        'label': label
+    }, function(data){
+        $.post('/change', {
+            'bid': {{ active }}
+        }, function(data) {
+            if (data.status == "ok") {
+                location.reload();
+            }
+            else {
+                alert("数据已标注完！");
+                location.reload();
+            }
+        });
+    });
+});
+
+});
+</script>
+<div id="law-content">
+    <div id="content-container">
+        <div id="content-back"></div>
+    </div>
+    <textarea id="content-textarea" readonly></textarea>
+</div>
+
+<div id="law-button">
+    <div class="law-button-container"><button alt-label-id="0" class="c0 button">其它</button></div>
+{% for label_name, label_id in labels %}
+    <div class="law-button-container">
+        <button alt-label-id="{{ label_id }}" class="c{{ label_id }} button">{{ label_name }}</button>
+    </div>
+{% endfor %}
+    <div id="opr-button">
+        <button class="button" id="just-exit">放弃并退出</button>
+        <button class="button" id="save-exit">保存并退出</button>
+        <button class="button" id="save-next">保存，下一个</button>
+    </div>
+
+</div>
