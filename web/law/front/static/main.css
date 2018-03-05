@@ -1,0 +1,330 @@
+div#left-bar {
+    position: fixed;
+    left : 0px;
+    top : 0px;
+    height: 100%;
+    width: 250px;
+    background-color: #32912F;
+    -moz-box-shadow: 4px 0px 5px #888888; /* 老的 Firefox */
+    box-shadow: 4px 0px 5px #888888;
+    overflow-y: auto;
+}
+
+div#main-content {
+    position: absolute;
+    top: 0px;
+    left: 250px;
+    right: 0px;
+}
+
+body {
+    background-color: #f0f0f0;
+}
+
+/* ------   left   ------ */
+div#user {
+    width: 100%;
+    height: 105px;
+    margin-top: 25px;
+}
+
+div#user p {
+    color: #EEE;
+    margin-left: 15px;
+}
+
+div#user #user-name-ipt {
+    color: #555;
+    font-weight: bold;
+    width: 130px;
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+}
+
+div#user #user-login-p {
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+div#user #login-button {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+
+    display: inline-block;
+    padding: 4px 8px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    float: right;
+    margin-right: 20px;
+    margin-top: 10px;
+
+    cursor: pointer;
+    outline: 0;
+}
+
+div#user #login-button:hover {
+    color: #fff;
+    background-color: #ec971f;
+    border-color: #d58512;
+}
+
+.left-hr {
+    border : none;
+    border-top: 1px solid #CCC;
+    height: 1px;
+    width: 87%
+}
+
+#brand {
+    width: 100%;
+}
+#brand p.law-brand {
+    width: 100%;
+    padding-left: 25px;
+    margin: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 18px;
+    color: #EEE;
+    background-color: #32912F;
+    cursor: pointer;
+}
+
+#brand p.law-brand:hover {
+    background-color: #49a642;
+}
+
+#brand p.law-brand.active {
+    background-color: #9bce70;
+    color: #555;
+    cursor: unset;
+    font-weight: bold;
+}
+/* ------ end left ------ */
+
+
+/* ------ content  ------ */
+#law-content {
+    width: 100%;
+    text-align: center;
+}
+
+#law-content #content-container,
+#law-content #content-textarea {
+    position: absolute;
+    width: 90%;
+    left: 30px;
+    box-sizing: border-box;
+    height: 450px;
+    top: 25px;
+    text-align: left;
+    color: #444;
+
+}
+
+#law-content #content-textarea {
+    overflow: auto;
+    display: block;
+    z-index: 2;
+    margin: 0;
+    border: 2px dashed #b8e1e9;
+    border-radius: 0;
+    background-color: transparent;
+    outline: 0;
+    resize: none;
+}
+
+#law-content #content-container {
+    overflow: auto;
+    z-index: 1;
+    border: 2px solid transparent;
+}
+
+#law-content #content-container #content-back {
+    background-color: #FAFAFA;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: transparent;
+}
+
+#law-content #content-textarea,
+#law-content #content-container #content-back {
+    padding: 10px;
+    font: 20px/28px 'Open Sans', sans-serif;
+    letter-spacing: 1px;
+}
+
+#law-content #content-container #content-back mark {
+    color: transparent;
+}
+
+
+#law-button {
+    width: 100%;
+    position: absolute;
+    left: 30px;
+    top: 470px;
+    width: 90%;
+}
+
+#law-button .law-button-container {
+    width: 19%;
+    text-align: center;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+#law-button .button {
+    display: inline-block;
+    padding: 4px 8px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    cursor: pointer;
+    outline: 0;
+
+    color: #444;
+    border-color: #aaa;
+}
+#law-button .button:hover {
+    border-color: #888;
+}
+
+#opr-button {
+    margin-top: 23px;
+}
+#opr-button .button {
+    display: inline-block;
+    padding: 4px 8px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    cursor: pointer;
+    outline: 0;
+    color: #fff;
+
+    float: right;
+    margin-right: 25px;
+}
+
+#opr-button #save-next.button {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+#opr-button #save-next.button:hover {
+    background-color: #449d44;
+    border-color: #398439;
+}
+
+#opr-button #save-exit.button {
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+#opr-button #save-exit.button:hover {
+    background-color: #ec971f;
+    border-color: #d58512;
+}
+
+#opr-button #just-exit.button {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+#opr-button #just-exit.button:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+/* ---- end content ---- */
+
+/* ----    colors   ---- */
+.c0 {
+    background: transparent;
+    color: #444;
+}
+
+.c1 {
+    background: #b1d5e5;
+    color: #444;
+}
+
+.c2 {
+    background: #b1e5b1;
+    color: #444;
+}
+
+.c3 {
+    background: #e5e1b1;
+    color: #444;
+}
+
+.c4 {
+    background: #e5b3b1;
+    color: #444;
+}
+
+.c5 {
+    background: #e2b1e5;
+    color: #444;
+}
+
+.c6 {
+    background: #e56e6e;
+    color: #444;
+}
+
+.c7 {
+    background: #e5cd6e;
+    color: #444;
+}
+
+.c8 {
+    background: #76e56e;
+    color: #444;
+}
+
+.c9 {
+    background: #6edee5;
+    color: #444;
+}
+
+.c10 {
+    background: #6e7ce5;
+    color: #444;
+}
+
+.c11 {
+    background: #cd6ee5;
+    color: #444;
+}
+
+/* ----  end colors ---- */
