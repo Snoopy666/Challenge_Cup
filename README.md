@@ -11,7 +11,7 @@
 一个事件由许多的要素（argument）组成，例如简单的婚姻事件就由 结婚人、结婚时间、是否离婚等一系列要素组成。则我们只要知道句子中的每一个词语在所描述的事件中属于哪一个argument，则能够抽取出事件。所以事件抽取简化成 **序列标注**问题
 
 #### 事件的组成
-* Event mention: a phrase or sentence within which an event is described, including a trig- ger and arguments.
+* Event mention: a phrase or sentence within which an event is described, including a trigger and arguments.
 * Event trigger: the main word that most clearly expresses the occurrence of an event (An ACE event trigger is typically a verb or a noun).
 * Event argument: an entity mention, tempo- ral expression or value (e.g. Job-Title) that is involved in an event (viz., participants).
 * Argument role: the relationship between an argument to the event in which it participates.
