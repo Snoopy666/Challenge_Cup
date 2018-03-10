@@ -1,20 +1,21 @@
 from django.shortcuts import render
-from labeled_data.models import User, LabelId, Data
+from labeled_data.models import User, LabelId, Data, Label
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 import json
 # Create your views here.
 
+
+MAX_NUM_LABEL = 3
 law_list = [
-    ('罪名1', 0),
-    ('罪名2', 1),
-    ('罪名3', 2),
-    ('罪名4', 3),
-    ('罪名5', 4),
-    ('罪名6', 5),
-    ('罪名7', 6),
-    ('罪名8', 7)
+    ('抢夺', 0),
+    ('抢劫', 1),
+    ('滥伐林木', 2),
+    ('故意伤害', 3),
+    ('故意杀人', 4),
+    ('容留他人吸毒', 5)
 ]
 
 
@@ -35,14 +36,14 @@ def index(request, **kwargs):
                     'law_list': law_list
                 })
             else:
-                labels = [(label.name. label.label_id) for label in LabelId.objects.filter(crit=nwuser.labeling.crit)]
+                labels = [(label.name, label.label_id) for label in LabelId.objects.filter(crit=nwuser.labeling.crit)]
                 return render(request, 'index.html', {
                     'logined': True,
                     'is_label': True,
                     'active': nwuser.labeling.crit,
                     'user_name': nwuser.name,
                     'law_list': law_list,
-                    'law_article': nwuser.labeling.data,
+                    'law_article': json.dumps(nwuser.labeling.data),
                     'labels': labels
                 })
 
@@ -85,20 +86,31 @@ def changeCrit(request, **kwargs):
     user = getUser(request.session.get('user', None))
 
     if request.method == 'POST' and (bid is not None) and (user is not None):
+        if user.allowed_crit != -1 and user.allowed_crit != bid:
+            return HttpResponse(
+                json.dumps({'status': 'err', 'reason': 'Permission denied.'}),
+                content_type="application/json")
         try:
-            nwlabel = Data.objects.filter(crit=bid, status='U')[0]
+
+            nwlabel = Data.objects.filter(
+                Q(crit=bid) & Q(num_labeled__lt=MAX_NUM_LABEL)
+                & ~Q(pk__in= user.label_set.all().values('data'))
+                )[0]
         except IndexError as e:
             return HttpResponse(
-                json.dumps({'status': 'err', 'reason': 'no unlabeled data'}),
+                json.dumps({'status': 'err', 'reason': 'no unlabeled data.'}),
                 content_type="application/json")
-        nwlabel.status = 'I'
+        nwlabel.num_labeled += 1
+        nwlabel.num_labeling += 1
         nwlabel.save()
+
         if user.labeling is not None:
-            user.labeling.status = 'U'
+            user.labeling.num_labeled -= 1
+            user.labeling.num_labeling -= 1
             user.labeling.save()
             user.labeling = None
-            user.save()
         user.labeling = nwlabel
+        user.save()
         return HttpResponse(
                 json.dumps({'status': 'ok', 'reason': nwlabel.pk}),
                 content_type="application/json")
@@ -112,7 +124,8 @@ def quit(request, **kwargs):
 
     if request.method == 'POST' and (user is not None):
         if user.labeling is not None:
-            user.labeling.status = 'U'
+            user.labeling.num_labeled -= 1
+            user.labeling.num_labeling -= 1
             user.labeling.save()
             user.labeling = None
             user.save()
@@ -130,10 +143,11 @@ def save(request, **kwargs):
     label = request.POST.get('label', '')
     if request.method == 'POST' and (user is not None) and (user.labeling is not None):
         if user.labeling.data == data and len(data) == len(label):
-            user.labeling.status = 'L'
-            user.labeling.label = label
+            Label(data=user.labeling, label=label, author=user).save()
+            user.labeling.num_labeling -= 1
             user.labeling.save()
             user.labeling = None
+            user.num_labeled += 1
             user.save()
             return HttpResponse(
                 json.dumps({'status': 'ok'}),

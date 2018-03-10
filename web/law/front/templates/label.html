@@ -7,7 +7,7 @@ var isWinPhone = ua.indexOf('windows phone') !== -1;
 var isIOS = !isWinPhone && !!ua.match(/ipad|iphone|ipod/);
 
 var labelID = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-var article = "{{ law_article }}";
+var article = {{ law_article | safe}};
 $('#content-textarea').val(article);
 
 function makeStr(d, num) {
@@ -46,7 +46,6 @@ function handleSelect(d) {
     label = label.substr(0, st) + makeStr(d, en - st) + label.substr(en);
     var ret = highLight(ta.val());
     $('#content-back').html(ret);
-    test.label = label;
 }
 
 
@@ -82,7 +81,7 @@ handleSelect("0");
 
 $('#law-button .law-button-container .button').click(function(){
     var id = $(this).attr('alt-label-id');
-    handleSelect(labelId[parseInt(id)]);
+    handleSelect(labelID[parseInt(id)]);
 });
 
 $('#just-exit').click(function(){
