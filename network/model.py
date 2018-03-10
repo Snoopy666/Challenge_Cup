@@ -13,19 +13,19 @@ class LSTM(nn.Module):
         self.batch_size = config.getint('data', 'batch_size')
         self.classes = classes
 
-        self.lstm = nn.LSTM(self.wordDim, self.hiddenDim, num_layers = self.nLayers, batch_first = True, bidirectional = True)
+        self.lstm = nn.LSTM(self.wordDim, self.hiddenDim, num_layers = self.nLayers, batch_first = True, bidirectional = False)
         self.f = nn.Linear(self.hiddenDim, self.classes)
 
     def init_hidden(self, useGpu):
         if useGpu:
             self.hidden = (
-                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hidden_dim).cuda()),
-                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hidden_dim).cuda())
+                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hiddenDim).cuda()),
+                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hiddenDim).cuda())
             )
         else:
             self.hidden = (
-                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hidden_dim)),
-                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hidden_dim))
+                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hiddenDim)),
+                torch.autograd.Variable(torch.zeros(self.nLayers, self.batch_size, self.hiddenDim))
             )
 
     def get_loss(self, tag_predict, tag_true):
@@ -33,8 +33,10 @@ class LSTM(nn.Module):
 
     def forward(self, x):
         out, self.hidden = self.lstm(x, self.hidden)
+        # out size batch_size * sequenceLen * hiddenDim
 
         out = self.f(out)
+
         return out
 
 

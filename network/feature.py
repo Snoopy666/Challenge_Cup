@@ -1,4 +1,4 @@
-import nn.word2vec as vec
+import network.word2vec as vec
 import numpy as np
 import json
 
@@ -25,6 +25,8 @@ class transformer(object):
                 break
             ans[i] = self.load_word(word[0])
             label.append(word[2])
+        while len(label) < self.sentLen:
+            label.append(0)
         return ans, label
 
     def get_data(self):
@@ -37,5 +39,10 @@ class transformer(object):
                 ans[i], l = self.load_sent(sent)
                 label.append(l)
         except Exception as err:
+            self.file.close()
+            self.file = open(self.datapath, 'r')
             return None
+
+        while len(label) < self.batch_size:
+            label.append([0] * self.sentLen)
         return ans, label
