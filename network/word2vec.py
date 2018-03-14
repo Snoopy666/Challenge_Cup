@@ -34,14 +34,14 @@ class Word2vec:
         print("load word embedding succeed")
         '''
         #self.vec = wv.load('/Users/Smart/Desktop/code/law_eventExtraction/EventExtraction_law/data/vectors.bin')
-        self.vec = gensim.models.KeyedVectors.load_word2vec_format('/Users/Smart/Desktop/code/law_eventExtraction/EventExtraction_law/data/vectors.bin', binary=True)
+        self.vec = gensim.models.KeyedVectors.load_word2vec_format('/Users/Smart/Desktop/code/law_eventExtraction/EventExtraction_law/data/vectors1.bin', binary=True)
 
 
     def load(self, word):
         try:
             return self.vec[word]
         except Exception as err:
-            return np.zeros((200,))
+            return np.zeros((30,))
         '''
         try:
             return self.vec[self.word2id[word]].astype(dtype=np.float32)
